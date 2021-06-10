@@ -6,10 +6,25 @@ for card in card_names:
     for suit in suits:
         cards.append(card+suit)
 
-# might not need card values for this but it's here just in case
-card_values = {}
-for card in cards:
-    if card[0] == "J" or card[0] == "Q" or card[0] == "K" or card[0] == "A":
-        card_values[card] = 10
-    else:
-        card_values[card] = int(card[0])
+
+# Again, taken this from blackjack projec
+import random
+
+class Player():
+
+    def __init__(self, name):
+        self.name = name
+
+    def deal_cards(self):
+
+        dealt_cards = []
+        dealt_count = 0
+
+        while dealt_count < 2:
+            random_num = random.randint(1, len(cards)+1)
+            random_card = cards.pop(random_num)
+            dealt_cards.append(random_card)
+            dealt_count += 1
+    
+        print("{}: {}, {}".format(self.name, dealt_cards[0], dealt_cards[1]))
+        return dealt_cards
