@@ -29,19 +29,16 @@ class Player():
         dealt_count = 0
 
         while dealt_count < 2:
-            random_num = random.randint(1, len(cards)+1)
-            random_card = cards.pop(random_num)
-            dealt_cards.append(random_card)
+
+            dealt_cards.append(cards.pop())
             dealt_count += 1
     
-        print("{}: {}, {}".format(self.name, dealt_cards[0], dealt_cards[1]))
         return dealt_cards[0], dealt_cards[1]
 
     def deal_one_card(self):
 
-        random_num = random.randint(1, len(cards)+1)
-        random_card = cards.pop(random_num)
-        print("{} pulled: {}".format(self.name, random_card))
+        random_card = cards.pop()
+
         return random_card
 
     def hit(self, choice):
@@ -50,15 +47,125 @@ class Player():
             extra_card = self.deal_one_card()
             return extra_card
 
-# Carry on in the morning good sir.
+# Getting card values
+def get_card_value(card):
 
-class CardsInPlay():
+    return card_values[card]
 
-    def __init__(self, card_name):
+# Replay function 
+def replay():
+  ans = input("Would you like to play again? ")
+  if ans[0].lower() == "y":
+    return True
+  else:
+    return False
 
-        self.holding = card_name
 
-    def card_value(self):
+# Start of play and game logic
+start = input("Weclome to Blackjack! Are you ready to play?(y/n) ")
+playing = False
 
-        pass
+if start[0].lower() == "n":
+    print("Nevermind, come back another day")
+else:
+    playing = True
 
+dealer = Player("Dealer")
+user = Player(input("What is your name? "))
+
+if playing == True:
+
+    random.shuffle(cards)
+
+    dealer_starting = dealer.deal_one_card()
+    user_starting = user.deal_two_cards()
+
+    user_count = 0
+    dealer_count = 0
+
+    dealer_count += get_card_value(dealer_starting) 
+    user_count += get_card_value(user_starting[0]) 
+    user_count += get_card_value(user_starting[1])
+    print("Your starting hand: {}, {}\nYour starting count: {}".format(user_starting[0], user_starting[1], str(user_count)))
+    print("Dealer shows: {}".format(dealer_starting))
+
+while playing:
+    
+    if user_count == 21:
+        print("Winner Winner Chicken Dinner!")
+        playing = False
+
+    elif user_count > 21:
+        print("You've bust! Loser.")
+        playing = False
+
+    else: 
+        user_turn = True 
+
+        while user_turn:
+
+            user_choice = input("Hit or stick? ")
+
+            if user_choice[0].lower() == "h":
+
+                print("You chose hit!") 
+                next_card = user.deal_one_card()
+                print("You've been dealt the: " + next_card)
+                
+                # Checking for an ace, if so, only adding 1 instead of 11
+                if get_card_value(next_card) == 11 and user_count >= 11:
+                    user_count += 1
+                else:
+                    user_count += get_card_value(next_card)
+                    print("Your count: " + str(user_count))
+
+                if user_count > 20:
+                    if user_count == 21:
+                        print("Winner Winner Chicken Dinner!")
+                        playing = False
+                        break
+                    else:
+
+                        print("You've bust! Loser.")
+                        playing = False
+                        break
+
+            else:
+                print("You chose stick!")
+                print("Your final count: " + str(user_count))
+                break
+        
+        # Dealers turn 
+        if user_count < 21:
+            while dealer_count < 22 or dealer_count < user_count:
+
+                next_dealer_card = dealer.deal_one_card()
+
+                if get_card_value(next_dealer_card) == 11 and dealer_count >= 11:
+                    dealer_count += 1
+                else:
+                    dealer_count += get_card_value(next_dealer_card)
+                    print("The dealer drew {}\nDealer count: {}".format(next_dealer_card, str(dealer_count)))
+                
+                
+
+            if dealer_count > 22:
+
+                print("The dealer bust! You win!")
+               
+
+            else:
+
+                print("You beat the house! Well done!")
+                
+
+    if replay():
+        user_count = 0
+        dealer_count = 0
+        print("\nCool! Let's go again!")
+    else:
+        print("\nOkay, maybe another time!")
+        playing = False
+        break        
+        
+   
