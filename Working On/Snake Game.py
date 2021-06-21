@@ -77,6 +77,7 @@ class Snake:
         screen.update()
 
 
+# Starting the game!
 snake = Snake()
 
 game_on = True
