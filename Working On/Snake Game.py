@@ -104,6 +104,7 @@ class Score(Turtle):
     def __init__(self):
         super().__init__()
         self.score = 0
+        self.highscore = 0
         self.hideturtle()
         self.pu()
         self.sety(275)
@@ -113,6 +114,10 @@ class Score(Turtle):
     def add_point(self):
         self.score += 1
         self.write(f"Score: {str(self.score)}", align="center", font=("Arial", 10, "normal"))
+
+    def reset(self):
+        if self.score > self.highscore:
+            self.highscore = self.score
 
 
 
